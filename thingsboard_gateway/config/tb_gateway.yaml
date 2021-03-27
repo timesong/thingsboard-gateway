@@ -1,5 +1,5 @@
 thingsboard:
-  host: demo.thingsboard.io
+  host: localhost
   port: 1883
   remoteShell: false
   remoteConfiguration: false
@@ -16,15 +16,15 @@ storage:
 #  max_read_records_count: 10
 #  max_records_per_file: 10000
 connectors:
-  -
-    name: MQTT Broker Connector
-    type: mqtt
-    configuration: mqtt.json
+  # -
+  #   name: MQTT Broker Connector
+  #   type: mqtt
+  #   configuration: mqtt.json
 
-#  -
-#    name: Modbus Connector
-#    type: modbus
-#    configuration: modbus.json
+  -
+    name: Modbus Connector
+    type: modbus
+    configuration: modbus.json
 #
 #  -
 #    name: Modbus Connector

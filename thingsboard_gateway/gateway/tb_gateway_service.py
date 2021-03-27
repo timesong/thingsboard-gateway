@@ -367,6 +367,7 @@ class TBGatewayService:
                     if self.__remote_configurator is None or not self.__remote_configurator.in_process:
                         events = self._event_storage.get_event_pack()
                     if events:
+                        print ("Events: ", events)
                         for event in events:
                             self.counter += 1
                             try:

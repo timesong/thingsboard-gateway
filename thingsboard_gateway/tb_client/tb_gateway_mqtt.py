@@ -75,7 +75,7 @@ class TBGatewayMqttClient(TBDeviceMqttClient):
     def _on_message(self, client, userdata, message):
         content = TBUtility.decode(message)
         super()._on_decoded_message(content, message)
-        self._on_decoded_message(content, message)
+        # self._on_decoded_message(content, message)
 
     def _on_decoded_message(self, content, message):
         if message.topic.startswith(GATEWAY_ATTRIBUTES_RESPONSE_TOPIC):

@@ -25,15 +25,20 @@ from thingsboard_gateway.tb_utility.tb_utility import TBUtility
 
 log = getLogger("service")
 
-UPDATE_SERVICE_BASE_URL = "https://updates.thingsboard.io"
-# UPDATE_SERVICE_BASE_URL = "http://127.0.0.1:8090"
+# UPDATE_SERVICE_BASE_URL = "https://updates.thingsboard.io"
+UPDATE_SERVICE_BASE_URL = "http://127.0.0.1:8090"
 
+def get_version():
+    try:
+        return get_distribution('thingsboard_gateway').version
+    except:
+        return "1.0.0"
 
 class TBUpdater(Thread):
     def __init__(self):
         super().__init__()
-        self.__version = {"current_version": get_distribution('thingsboard_gateway').version,
-                          "latest_version": get_distribution('thingsboard_gateway').version}
+        self.__version = {"current_version": get_version(),
+                          "latest_version": get_version()}
         self.__instance_id = str(uuid1())
         self.__platform = system()
         self.__release = release()

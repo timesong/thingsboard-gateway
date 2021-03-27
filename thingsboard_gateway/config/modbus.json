@@ -1,7 +1,7 @@
 {
   "server": {
     "type": "tcp",
-    "host": "127.0.0.1",
+    "host": "192.168.0.107",
     "port": 5020,
     "timeout": 35,
     "method": "socket",
@@ -94,13 +94,6 @@
             "functionCode": 4,
             "objectsCount": 4,
             "address": 20
-          },
-          {
-            "tag": "64uint_read",
-            "type": "64uint",
-            "functionCode": 4,
-            "objectsCount": 1,
-            "address": 24
           },
           {
             "tag": "16float_read",

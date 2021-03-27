@@ -123,7 +123,7 @@ class ModbusConnector(Connector, threading.Thread):
             device_responses = {"timeseries": {},
                                 "attributes": {},
                                 }
-            to_send = {}
+            to_send = {"telemetry": [], "attributes": []}
             try:
                 for config_section in device_responses:
                     if self.__devices[device]["config"].get(config_section) is not None:
@@ -156,8 +156,8 @@ class ModbusConnector(Connector, threading.Thread):
                             except Exception as e:
                                 log.error(e)
 
-                            to_send = {"deviceName": converted_data["deviceName"], "deviceType": converted_data["deviceType"],
-                                       "telemetry": [], "attributes": []}
+                            to_send.update({"deviceName": converted_data["deviceName"], "deviceType": converted_data["deviceType"],
+                                       })
                             if converted_data and current_device_config.get("sendDataOnlyOnChange"):
                                 self.statistics['MessagesReceived'] += 1
                                 for converted_data_section in CONVERTED_DATA_SECTIONS:
