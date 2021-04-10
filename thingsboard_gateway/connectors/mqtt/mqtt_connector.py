@@ -1,4 +1,4 @@
-#     Copyright 2020. ThingsBoard
+#     Copyright 2021. ThingsBoard
 #
 #     Licensed under the Apache License, Version 2.0 (the "License");
 #     you may not use this file except in compliance with the License.
@@ -20,8 +20,10 @@ from threading import Thread
 from re import match, fullmatch, search
 import ssl
 from paho.mqtt.client import Client
-from thingsboard_gateway.connectors.connector import Connector, log
+
+from thingsboard_gateway.tb_utility.tb_loader import TBModuleLoader
 from thingsboard_gateway.tb_utility.tb_utility import TBUtility
+from thingsboard_gateway.connectors.connector import Connector, log
 
 
 class MqttConnector(Connector, Thread):
@@ -53,7 +55,7 @@ class MqttConnector(Connector, Thread):
             "disconnectRequests": ['topicFilter'],
             "attributeRequests": ['topicFilter', 'topicExpression', 'valueExpression'],
             "attributeUpdates": ['deviceNameFilter', 'attributeFilter', 'topicExpression', 'valueExpression']
-        }
+            }
 
         # Mappings, i.e., telemetry/attributes-push handlers provided by user via configuration file
         self.load_handlers('mapping', mandatory_keys['mapping'], self.__mapping)
@@ -223,7 +225,7 @@ class MqttConnector(Connector, Thread):
             3: "server unavailable",
             4: "bad username or password",
             5: "not authorised",
-        }
+            }
 
         if result_code == 0:
             self._connected = True
@@ -249,7 +251,7 @@ class MqttConnector(Connector, Thread):
                     # Get converter class from "extension" parameter or default converter
                     converter_class_name = mapping["converter"].get("extension", default_converter_class_name)
                     # Find and load required class
-                    module = TBUtility.check_and_import(self._connector_type, converter_class_name)
+                    module = TBModuleLoader.import_module(self._connector_type, converter_class_name)
                     if module:
                         self.__log.debug('Converter %s for topic %s - found!', converter_class_name, mapping["topicFilter"])
                         converter = module(mapping)

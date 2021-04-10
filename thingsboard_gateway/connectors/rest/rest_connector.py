@@ -1,3 +1,17 @@
+#     Copyright 2021. ThingsBoard
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+
 from time import sleep
 from threading import Thread
 from string import ascii_lowercase
@@ -7,6 +21,7 @@ from re import fullmatch
 from queue import Queue
 from simplejson import loads, JSONDecodeError
 
+from thingsboard_gateway.tb_utility.tb_loader import TBModuleLoader
 from thingsboard_gateway.tb_utility.tb_utility import TBUtility
 
 
@@ -80,8 +95,8 @@ class RESTConnector(Connector, Thread):
     def load_endpoints(self):
         endpoints = {}
         for mapping in self.__config.get("mapping"):
-            converter = TBUtility.check_and_import(self._connector_type,
-                                                   mapping.get("extension", self._default_converters["uplink"]))
+            converter = TBModuleLoader.import_module(self._connector_type,
+                                                     mapping.get("extension", self._default_converters["uplink"]))
             endpoints.update({mapping['endpoint']: {"config": mapping, "converter": converter}})
         return endpoints
 
@@ -201,10 +216,10 @@ class RESTConnector(Connector, Thread):
         }
         for request_section in requests_from_tb:
             for request_config_object in self.__config.get(request_section, []):
-                uplink_converter = TBUtility.check_and_import(self._connector_type,
-                                                       request_config_object.get("extension", self._default_converters["uplink"]))(request_config_object)
-                downlink_converter = TBUtility.check_and_import(self._connector_type,
-                                                       request_config_object.get("extension", self._default_converters["downlink"]))(request_config_object)
+                uplink_converter = TBModuleLoader.import_module(self._connector_type,
+                                                                request_config_object.get("extension", self._default_converters["uplink"]))(request_config_object)
+                downlink_converter = TBModuleLoader.import_module(self._connector_type,
+                                                                  request_config_object.get("extension", self._default_converters["downlink"]))(request_config_object)
                 request_dict = {**request_config_object,
                                 "uplink_converter": uplink_converter,
                                 "downlink_converter": downlink_converter,
